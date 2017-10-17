@@ -8,7 +8,7 @@
 #define MODBUS_H
 
 #define MAX_REGS     32
-#define MAX_FRAME   128
+#define MAX_FRAME    48
 //#define USE_HOLDING_REGISTERS_ONLY
 
 typedef unsigned int u_int;
@@ -70,7 +70,7 @@ class Modbus {
         word Reg(word address);
 
     protected:
-        byte *_frame;
+        byte  _frame[MAX_FRAME];
         byte  _len;
         byte  _reply;
         void receivePDU(byte* frame);

@@ -172,10 +172,8 @@ void Modbus::receivePDU(byte* frame) {
 }
 
 void Modbus::exceptionResponse(byte fcode, byte excode) {
-    //Clean frame buffer
-    free(_frame);
     _len = 2;
-    _frame = (byte *) malloc(_len);
+
     _frame[0] = fcode + 0x80;
     _frame[1] = excode;
 
@@ -196,16 +194,11 @@ void Modbus::readRegisters(word startreg, word numregs) {
         return;
     }
 
-
-    //Clean frame buffer
-    free(_frame);
-	_len = 0;
-
 	//calculate the query reply message length
 	//for each register queried add 2 bytes
 	_len = 2 + numregs * 2;
 
-    _frame = (byte *) malloc(_len);
+
     if (!_frame) {
         this->exceptionResponse(MB_FC_READ_REGS, MB_EX_SLAVE_FAILURE);
         return;
@@ -261,10 +254,8 @@ void Modbus::writeMultipleRegisters(byte* frame,word startreg, word numoutputs, 
         }
     }
 
-    //Clean frame buffer
-    free(_frame);
 	_len = 5;
-    _frame = (byte *) malloc(_len);
+
     if (!_frame) {
         this->exceptionResponse(MB_FC_WRITE_REGS, MB_EX_SLAVE_FAILURE);
         return;
@@ -305,16 +296,12 @@ void Modbus::readCoils(word startreg, word numregs) {
         return;
     }
 
-    //Clean frame buffer
-    free(_frame);
-	_len = 0;
-
     //Determine the message length = function type, byte count and
 	//for each group of 8 registers the message length increases by 1
 	_len = 2 + numregs/8;
 	if (numregs%8) _len++; //Add 1 to the message length for the partial byte.
 
-    _frame = (byte *) malloc(_len);
+
     if (!_frame) {
         this->exceptionResponse(MB_FC_READ_COILS, MB_EX_SLAVE_FAILURE);
         return;
@@ -357,16 +344,12 @@ void Modbus::readInputStatus(word startreg, word numregs) {
         return;
     }
 
-    //Clean frame buffer
-    free(_frame);
-	_len = 0;
-
     //Determine the message length = function type, byte count and
 	//for each group of 8 registers the message length increases by 1
 	_len = 2 + numregs/8;
 	if (numregs%8) _len++; //Add 1 to the message length for the partial byte.
 
-    _frame = (byte *) malloc(_len);
+
     if (!_frame) {
         this->exceptionResponse(MB_FC_READ_INPUT_STAT, MB_EX_SLAVE_FAILURE);
         return;
@@ -409,15 +392,11 @@ void Modbus::readInputRegisters(word startreg, word numregs) {
         return;
     }
 
-    //Clean frame buffer
-    free(_frame);
-	_len = 0;
-
 	//calculate the query reply message length
 	//for each register queried add 2 bytes
 	_len = 2 + numregs * 2;
 
-    _frame = (byte *) malloc(_len);
+
     if (!_frame) {
         this->exceptionResponse(MB_FC_READ_INPUT_REGS, MB_EX_SLAVE_FAILURE);
         return;
@@ -480,10 +459,8 @@ void Modbus::writeMultipleCoils(byte* frame,word startreg, word numoutputs, byte
         }
     }
 
-    //Clean frame buffer
-    free(_frame);
 	_len = 5;
-    _frame = (byte *) malloc(_len);
+
     if (!_frame) {
         this->exceptionResponse(MB_FC_WRITE_COILS, MB_EX_SLAVE_FAILURE);
         return;
@@ -512,6 +489,3 @@ void Modbus::writeMultipleCoils(byte* frame,word startreg, word numoutputs, byte
     _reply = MB_REPLY_NORMAL;
 }
 #endif
-
-
-
