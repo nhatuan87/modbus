@@ -315,6 +315,7 @@ void Modbus::readCoils(word startreg, word numregs) {
     word i;
 	while (numregs) {
         i = (totregs - numregs) / 8;
+        if (bitn == 0) _frame[2+i] = 0; // init Coil status
 		if (this->Coil(startreg))
 			bitSet(_frame[2+i], bitn);
 		else
